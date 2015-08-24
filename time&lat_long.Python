@@ -1,0 +1,88 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Mar 25 00:33:24 2015
+
+@author: wendy
+"""
+#part b(using package:nx.single_source_dijkstra())
+import networkx as nx
+import time
+file="/home/winnie/m.txt"
+myfile=open(file,'r')
+graph=nx.read_weighted_edgelist(myfile,nodetype=str)
+Start=time.time()
+v=nx.single_source_dijkstra(graph,'a')
+print v
+time.time()-Start
+'''
+#shortest path
+({'a': 0, 'c': 8.0, 'b': 4.0, 'e': 14.0, 'd': 12.0, 'g': 19.0, 'f': 9.0, 'i': 21.0, 'h': 11.0},
+ {'a': ['a'], 'c': ['a', 'c'], 'b': ['a', 'b'], 'e': ['a', 'b', 'd', 'e'], 'd': ['a', 'b', 'd'],
+  'g': ['a', 'b', 'd', 'g'], 'f': ['a', 'c', 'f'], 'i': ['a', 'c', 'f', 'h', 'i'], 'h': ['a', 'c', 'f', 'h']})
+
+#runtime 
+0.06919479370117188
+'''
+
+#part c(1)(using package:nx.single_source_dijkstra())
+pack=[(0,8000),(12,9000),(100,8500),(153,2345),(224,1000),(314,567),
+      (1000,7546),(0,256),(10,1257),(5,6432),(24,976),(168,8577)]
+import networkx as nx
+import time
+file="/home/winnie/DC.txt"
+Myfile=open(file,'r')
+Graph=nx.read_weighted_edgelist(Myfile,nodetype=int)
+
+Totaltime=[]
+for x in pack:
+    Start=time.time()
+    shortpath=nx.single_source_dijkstra(Graph,x[0],x[1])
+    Time=time.time()-Start
+    Totaltime.append(Time)
+mydict=dict(zip(pack,Totaltime))
+print mydict
+
+'''
+#Totaltime
+{(0, 8000): 0.14976191520690918, (314, 567): 0.012153863906860352, (24, 976): 0.023434877395629883, (100, 8500): 0.12348198890686035, (1000, 7546): 0.010432004928588867, (168, 8577): 0.08739900588989258, (0, 256): 0.008763790130615234, (5, 6432): 0.1344749927520752, (224, 1000): 0.08409714698791504, (153, 2345): 0.03655099868774414, (10, 1257): 0.027851104736328125, (12, 9000): 0.1260528564453125}
+'''
+
+#part c(2)
+#get the shortest path 
+shortpath1=nx.dijkstra_path(Graph,pack[0][0],pack[0][1])
+shortpath2=nx.dijkstra_path(Graph,pack[1][0],pack[1][1])
+
+#read file
+file=open("/home/winnie/DCLatLon.txt",'r')
+li=[]
+for line in file:
+    li.append(line.strip())
+
+ml=[]
+for m in li:
+    nn=m.split('\t')
+    ml.append(nn)
+
+Node=[]
+for x in ml:
+    Node.append(int(x[0]))
+
+Latitute=[]
+for x in ml:
+    Latitute.append(float(x[1]))
+    
+Longtitute=[]
+for x in ml:
+    Longtitute.append(float(x[2]))
+    
+mydict=dict(zip(Node,zip(Latitute,Longtitute)))
+
+#get the latitute and longtitute for each node in each path   
+for x in shortpath1:
+    print mydict[x]
+    
+for x in shortpath2:
+    print mydict[x]
+
+    
+
