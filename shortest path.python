@@ -1,0 +1,131 @@
+
+"""
+Created on Wed Mar 25 00:33:24 2015
+
+@author: wendy
+"""
+#part b
+from pprint import pprint
+import time
+Start=time.time()
+def dijkstra(graph,start,target):
+    begin = 0
+    for u in graph:
+        for v ,w in graph[u]:
+           begin = begin + w
+    dist = dict([(u,begin) for u in graph])
+    prev = dict([(u,None) for u in graph])
+    q = graph.keys()
+    dist[start] = 0
+    
+    def x(v):
+        return dist[v]
+    while q != []:
+        u = min(q, key=x)
+        q.remove(u)
+        for v,w in graph[u]:
+            alt = dist[u] + w
+            if alt < dist[v]:
+                dist[v] = alt
+                prev[v] = u
+                
+    trav = []
+    temp = target
+    while temp != start:
+        trav.append(prev[temp])
+        temp = prev[temp]
+    trav.reverse()
+    trav.append(target)
+    return "-> ".join(trav),dist[target]
+    
+file="/home/winnie/m.txt"
+myfile=open(file,'r')
+#print myfile.readlines()
+li=[]
+for line in myfile:
+    li.append(line.strip())
+
+ml=[]
+for m in li:
+    nn=m.split('\t')
+    ml.append(nn)
+    
+  
+graph = {
+    "a":  [("b",4), ("c", 8)],
+    "b" : [("a", 4),("c",11),("d",8)],
+    "c" : [("a", 8), ("b", 11),("d",8),("e",7),("f",1)],
+    "d" : [("b", 8), ("c", 8),("e",2),("h",4),("g",7)],
+    "e" : [("c", 7),("d", 2),("f",6)],
+    "f" : [("c", 2),("e", 6),("h",2)],
+    "g" : [("d", 7),("h",14),("i",9)],
+    "h" : [("d", 4),("f",2),("g",14),("i",10)],
+    "i" : [("g", 9),("h",10)]
+    }
+pprint(graph)
+start="a"
+Totaltime=[]
+mydict=[]
+node=graph.keys()
+for i in node:
+    if i!=start:
+         dist=dijkstra(graph,start,i)
+         Time=time.time()-Start
+         print dist
+         mydict.append(dist)
+         Totaltime.append(Time)
+print Totaltime
+print mydict
+
+'''
+#Shortest path
+[('a-> c', 8), ('a-> b', 4), ('a-> b-> d-> e', 14), 
+ ('a-> b-> d', 12), ('a-> b-> d-> g', 19), ('a-> c-> f', 9),
+ ('a-> c-> f-> h-> i', 21), ('a-> c-> f-> h', 11)]
+ 
+#Total time
+[1.2430760860443115, 1.2433791160583496, 1.2435650825500488,
+ 1.2437469959259033, 1.2439241409301758, 1.2440850734710693,
+ 1.2442660331726074, 1.244447946548462]
+         
+'''       
+#part c
+file="/home/winnie/DC.txt"
+Myfile=open(file,'r')
+li=[]
+for line in Myfile:
+    li.append(line.strip())
+ml=[]
+for m in li:
+    nn=m.split('\t')
+    ml.append(nn)
+
+Startnode=[]
+for x in ml:
+    Startnode.append(int(x[0]))
+
+Endnode=[]
+for x in ml:
+    Endnode.append(int(x[1]))
+    
+Weight=[]
+for x in ml:
+    Weight.append(float(x[2]))
+        
+Graph=dict(zip(zip(Startnode,Endnode),Weight))
+pprint(Graph)
+
+pack=[(0,8000),(12,9000),(100,8500),(153,2345),(224,1000),(314,567),
+      (1000,7546),(0,256),(10,1257),(5,6432),(24,976),(168,8577)]
+
+Totaltime=[]
+for x in pack:
+    shortpath=dijkstra(Graph,x[0],x[1])
+    Time=time.time()-Start
+    Totaltime.append(Time)
+mydict=dict(zip(pack,Totaltime))
+print mydict
+
+
+
+
